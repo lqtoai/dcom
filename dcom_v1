@@ -1,0 +1,59 @@
+import time
+import requests,time
+
+class Dcom:
+    def __init__(self) -> None:
+        self.headers = {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'DNT': '1',
+            'Origin': 'http://192.168.8.1',
+            'Referer': 'http://192.168.8.1/index.html',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    def login(self):
+        data = {
+            'isTest': 'false',
+            'goformId': 'LOGIN',
+            'password': 'YWRtaW4=',
+            'username': 'YWRtaW4=',
+        }
+        response = requests.post('http://192.168.8.1/goform/goform_set_cmd_process', headers=self.headers, data=data, verify=False)
+        print(response)
+    def ip(self):
+        try:
+            self.login()
+            data = {
+                'isTest': 'false',
+                'goformId': 'SET_BEARER_PREFERENCE',
+                'BearerPreference': 'Only_LTE',
+            }
+
+            response = requests.post('http://192.168.8.1/goform/goform_set_cmd_process', headers=self.headers, data=data, verify=False)
+            print(response.text)
+            if 'success' in response.text:
+                print("Đổi thành công")
+            else:
+                print("Đổi thất bại")
+        except Exception as e:
+            print(e)
+            print("Đổi ip lỗi")
+
+def main():
+    dcom = Dcom()
+    dcom.ip()
+
+while True:
+    main()
+    countdown_time = 60 * 1
+
+    while countdown_time:
+        minutes, seconds = divmod(countdown_time, 60)
+        print(f'{minutes:02d}:{seconds:02d}', end='\r')  # In đè lên dòng trước
+        time.sleep(1)  # Chờ 1 giây
+        countdown_time -= 1
+
+    print("Time's up!")
