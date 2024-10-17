@@ -1,4 +1,4 @@
-import time
+#!/bin/python3
 import requests,time
 
 class Dcom:
